@@ -1,18 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:padding="16dp"
+    android:background="@drawable/regback">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Greeting and Name -->
+        <TextView
+            android:id="@+id/tvGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello,"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:textSize="22sp"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Date and Time -->
+        <TextView
+            android:id="@+id/tvDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date and Time"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Functional Buttons -->
+        <Button
+            android:id="@+id/btnBookParking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Book Parking"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnCheckAvailability"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Parking Availability Check"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnCostCalculation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Automatic Cost Calculation"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnCancelParking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Parking Cancellation"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Profile"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Feedback"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnAddBalance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Balance"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+</ScrollView>
