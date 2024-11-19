@@ -1,9 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Book_Parking">
+    android:padding="40dp"
+    android:background="#f7f7f7">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Pincode Input -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Pincode:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etPincode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Pincode"
+            android:inputType="number"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Vehicle Type Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Vehicle Type:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/rgVehicleType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbCar"
+                android:layout_width="87dp"
+                android:layout_height="wrap_content"
+                android:text="Car" />
+
+            <RadioButton
+                android:id="@+id/rbBike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bike" />
+        </RadioGroup>
+
+        <!-- Start and End Time -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Start Time:"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pick Start Time"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select End Time:"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pick End Time"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Map Placeholder -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Available Parking Slots:"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
+
+        <FrameLayout
+            android:id="@+id/mapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#cccccc"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Wallet Info -->
+        <TextView
+            android:id="@+id/tvWalletBalance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wallet Balance: ₹0"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Book Parking Button -->
+        <Button
+            android:id="@+id/btnBookParking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Book Parking"
+            android:backgroundTint="#007BFF"
+            android:textColor="#fff" />
+    </LinearLayout>
+</ScrollView>

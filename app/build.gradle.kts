@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.vehicle_parking_booking_system"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.vehicle_parking_booking_system"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -43,4 +43,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation ("com.google.firebase:firebase-auth:21.3.0")
     implementation ("com.google.firebase:firebase-database:20.2.2")
+    implementation ("com.razorpay:checkout:1.6.21")
+
 }
