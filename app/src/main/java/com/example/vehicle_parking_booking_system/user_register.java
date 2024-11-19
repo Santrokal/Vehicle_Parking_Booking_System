@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ public class user_register extends AppCompatActivity {
     private Button btnRegister;
     private ProgressBar progressBar;
 
+    private TextView tvLoginRedirect;
+
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
 
@@ -42,6 +45,7 @@ public class user_register extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnRegister = findViewById(R.id.btnRegister);
         progressBar = findViewById(R.id.progressBar);
+        tvLoginRedirect = findViewById(R.id.tvLoginRedirect);
 
         // Initialize Firebase Auth and Database
         firebaseAuth = FirebaseAuth.getInstance();
@@ -49,6 +53,15 @@ public class user_register extends AppCompatActivity {
 
         // Register Button Listener
         btnRegister.setOnClickListener(v -> registerUser());
+
+        tvLoginRedirect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), user_login.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void registerUser() {
