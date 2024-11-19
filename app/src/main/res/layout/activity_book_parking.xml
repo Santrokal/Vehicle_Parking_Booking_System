@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:text="Enter Pincode:"
             android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            android:textColor="#333333" />
 
         <EditText
             android:id="@+id/etPincode"
@@ -25,6 +26,8 @@
             android:layout_height="wrap_content"
             android:hint="Enter Pincode"
             android:inputType="number"
+            android:backgroundTint="#CCCCCC"
+            android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
         <!-- Vehicle Type Selection -->
@@ -33,25 +36,29 @@
             android:layout_height="wrap_content"
             android:text="Select Vehicle Type:"
             android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            android:textColor="#333333" />
 
         <RadioGroup
             android:id="@+id/rgVehicleType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
 
             <RadioButton
                 android:id="@+id/rbCar"
-                android:layout_width="87dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Car" />
+                android:text="Car"
+                android:textColor="#000000" />
 
             <RadioButton
                 android:id="@+id/rbBike"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bike" />
+                android:text="Bike"
+                android:textColor="#000000" />
         </RadioGroup>
 
         <!-- Start and End Time -->
@@ -60,26 +67,32 @@
             android:layout_height="wrap_content"
             android:text="Select Start Time:"
             android:textSize="16sp"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:textColor="#333333" />
 
         <Button
             android:id="@+id/btnStartTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Pick Start Time"
+            android:backgroundTint="#007BFF"
+            android:textColor="#ffffff"
             android:layout_marginBottom="16dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select End Time:"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="#333333" />
 
         <Button
             android:id="@+id/btnEndTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Pick End Time"
+            android:backgroundTint="#007BFF"
+            android:textColor="#ffffff"
             android:layout_marginBottom="16dp" />
 
         <!-- Map Placeholder -->
@@ -88,14 +101,16 @@
             android:layout_height="wrap_content"
             android:text="Available Parking Slots:"
             android:textSize="16sp"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:textColor="#333333" />
 
-        <FrameLayout
+        <fragment
             android:id="@+id/mapFragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#cccccc"
             android:layout_marginBottom="16dp" />
+
 
         <!-- Wallet Info -->
         <TextView
@@ -104,6 +119,7 @@
             android:layout_height="wrap_content"
             android:text="Wallet Balance: ₹0"
             android:textSize="16sp"
+            android:textColor="#333333"
             android:layout_marginBottom="16dp" />
 
         <!-- Book Parking Button -->
@@ -112,7 +128,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Book Parking"
-            android:backgroundTint="#007BFF"
-            android:textColor="#fff" />
+            android:backgroundTint="#28A745"
+            android:textColor="#ffffff"
+            android:padding="12dp"
+            android:elevation="4dp" />
     </LinearLayout>
 </ScrollView>
