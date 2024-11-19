@@ -44,5 +44,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth:21.3.0")
     implementation ("com.google.firebase:firebase-database:20.2.2")
     implementation ("com.razorpay:checkout:1.6.21")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+
 
 }

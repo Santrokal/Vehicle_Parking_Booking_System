@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Vehicle_Parking_Booking_System</string>
+    <string name="google_maps_key">AIzaSyCPh7uKZg9Q3_WUXGJFvtmmrBqgK3iqlNQ</string>
+
 </resources>
