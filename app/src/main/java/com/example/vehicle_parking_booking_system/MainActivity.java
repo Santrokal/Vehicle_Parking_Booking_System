@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         tvDateTime = findViewById(R.id.tvDateTime);
 
         btnBookParking = findViewById(R.id.btnBookParking);
-        btnCheckAvailability = findViewById(R.id.btnCheckAvailability);
         btnCostCalculation = findViewById(R.id.btnCostCalculation);
         btnCancelParking = findViewById(R.id.btnCancelParking);
         btnProfile = findViewById(R.id.btnProfile);
@@ -83,10 +82,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, Book_Parking.class));
         });
 
-        btnCheckAvailability.setOnClickListener(v -> {
-            Toast.makeText(this, "Navigating to Parking Availability Check", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(MainActivity.this, Check_Availability.class));
-        });
 
         btnCostCalculation.setOnClickListener(v -> {
             Toast.makeText(this, "Navigating to Cost Calculation", Toast.LENGTH_SHORT).show();

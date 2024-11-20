@@ -51,12 +51,6 @@
             android:text="Book Parking"
             android:layout_marginBottom="16dp" />
 
-        <Button
-            android:id="@+id/btnCheckAvailability"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Parking Availability Check"
-            android:layout_marginBottom="16dp" />
 
         <Button
             android:id="@+id/btnCostCalculation"
