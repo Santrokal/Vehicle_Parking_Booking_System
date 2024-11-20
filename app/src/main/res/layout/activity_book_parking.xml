@@ -3,32 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="40dp"
+    android:padding="16dp"
     android:background="#f7f7f7">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Pincode Input -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter Pincode:"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp"
-            android:textColor="#333333" />
-
-        <EditText
-            android:id="@+id/etPincode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Pincode"
-            android:inputType="number"
-            android:backgroundTint="#CCCCCC"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="@drawable/rounded_corner_background">
 
         <!-- Vehicle Type Selection -->
         <TextView
@@ -51,7 +34,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Car"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:layout_marginEnd="16dp" />
 
             <RadioButton
                 android:id="@+id/rbBike"
@@ -61,7 +45,7 @@
                 android:textColor="#000000" />
         </RadioGroup>
 
-        <!-- Start and End Time -->
+        <!-- Start Time -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,6 +63,7 @@
             android:textColor="#ffffff"
             android:layout_marginBottom="16dp" />
 
+        <!-- End Time -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -95,24 +80,22 @@
             android:textColor="#ffffff"
             android:layout_marginBottom="16dp" />
 
-        <!-- Map Placeholder -->
+        <!-- Location Selection -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Available Parking Slots:"
+            android:text="Select Parking Location:"
             android:textSize="16sp"
             android:layout_marginTop="16dp"
             android:textColor="#333333" />
 
-        <fragment
-            android:id="@+id/mapFragment"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <Spinner
+            android:id="@+id/spinnerLocations"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />
 
-
-        <!-- Wallet Info -->
+        <!-- Wallet Balance -->
         <TextView
             android:id="@+id/tvWalletBalance"
             android:layout_width="match_parent"
@@ -131,6 +114,7 @@
             android:backgroundTint="#28A745"
             android:textColor="#ffffff"
             android:padding="12dp"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:layout_marginBottom="16dp" />
     </LinearLayout>
 </ScrollView>

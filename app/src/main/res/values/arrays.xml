@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string-array name="pincode_locations">
+            <item>Egmore</item>
+            <item>Parrys</item>
+            <item>T. Nagar</item>
+            <item>Kodambakkam</item>
+            <item>Triplicane</item>
+            <item>Marina Beach</item>
+        </string-array>
+</resources>

@@ -1,26 +1,18 @@
 package com.example.vehicle_parking_booking_system;
 
 import android.app.TimePickerDialog;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,31 +21,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Book_Parking extends AppCompatActivity {
 
-    private EditText etPincode;
+    private Spinner spinnerLocations;
     private RadioGroup rgVehicleType;
     private Button btnStartTime, btnEndTime, btnBookParking;
     private TextView tvWalletBalance;
+
     private String startTime, endTime;
     private double walletBalance = 0;
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
 
-    private GoogleMap googleMap;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_parking);
 
-        // Initialize UI elements
-        etPincode = findViewById(R.id.etPincode);
+        // Initialize UI components
+        spinnerLocations = findViewById(R.id.spinnerLocations);
         rgVehicleType = findViewById(R.id.rgVehicleType);
         btnStartTime = findViewById(R.id.btnStartTime);
         btnEndTime = findViewById(R.id.btnEndTime);
@@ -85,14 +75,8 @@ public class Book_Parking extends AppCompatActivity {
             });
         }
 
-        // Initialize Google Map
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(map -> {
-                googleMap = map;
-                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            });
-        }
+        // Load locations from arrays.xml into the Spinner
+        loadLocations();
 
         // Time Pickers
         btnStartTime.setOnClickListener(v -> showTimePicker(true));
@@ -100,14 +84,24 @@ public class Book_Parking extends AppCompatActivity {
 
         // Book Parking
         btnBookParking.setOnClickListener(v -> {
-            String pincode = etPincode.getText().toString().trim();
-            if (pincode.isEmpty()) {
-                Toast.makeText(this, "Please enter a valid pincode.", Toast.LENGTH_SHORT).show();
+            String selectedLocation = (String) spinnerLocations.getSelectedItem();
+            if (selectedLocation == null || selectedLocation.isEmpty()) {
+                Toast.makeText(this, "Please select a location.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            fetchParkingSlots(pincode);
-            bookParking();
+            bookParking(selectedLocation);
         });
+    }
+
+    private void loadLocations() {
+        // Fetch locations from arrays.xml
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.pincode_locations,
+                android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerLocations.setAdapter(adapter);
     }
 
     private void showTimePicker(boolean isStartTime) {
@@ -129,145 +123,203 @@ public class Book_Parking extends AppCompatActivity {
         timePickerDialog.show();
     }
 
-    private void fetchParkingSlots(String pincode) {
-        if (googleMap == null) {
-            Toast.makeText(this, "Map is not ready.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Geocoder geocoder = new Geocoder(this);
-        try {
-            // Get latitude and longitude for the pincode
-            List<Address> addresses = geocoder.getFromLocationName(pincode, 1);
-            if (addresses.isEmpty()) {
-                Toast.makeText(this, "Invalid pincode or location not found.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Address address = addresses.get(0);
-            LatLng location = new LatLng(address.getLatitude(), address.getLongitude());
-
-            // Center the map on the pincode location
-            googleMap.clear();
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14));
-
-            // Simulate available parking slots (you should replace this with real data from your database)
-            List<LatLng> parkingSlots = Arrays.asList(
-                    new LatLng(location.latitude + 0.001, location.longitude),
-                    new LatLng(location.latitude - 0.001, location.longitude + 0.001),
-                    new LatLng(location.latitude, location.longitude - 0.001)
-            );
-
-            for (LatLng slot : parkingSlots) {
-                googleMap.addMarker(new MarkerOptions()
-                        .position(slot)
-                        .title("Parking Slot")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            }
-
-            // Add a marker at the entered pincode
-            googleMap.addMarker(new MarkerOptions()
-                    .position(location)
-                    .title("Entered Location")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
-        } catch (Exception e) {
-            Toast.makeText(this, "Error fetching location: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void bookParking() {
-        String pincode = etPincode.getText().toString().trim();
+    private void bookParking(String location) {
         int selectedVehicleTypeId = rgVehicleType.getCheckedRadioButtonId();
         RadioButton selectedVehicleType = findViewById(selectedVehicleTypeId);
         String vehicleType = selectedVehicleType != null ? selectedVehicleType.getText().toString() : "";
 
-        if (pincode.isEmpty() || startTime == null || endTime == null || vehicleType.isEmpty()) {
-            Toast.makeText(this, "Please fill all the details.", Toast.LENGTH_SHORT).show();
+        if (startTime == null || endTime == null || vehicleType.isEmpty()) {
+            Toast.makeText(this, "Please complete all fields.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Calculate parking duration
-        String[] startSplit = startTime.split(":");
-        String[] endSplit = endTime.split(":");
-        int startHour = Integer.parseInt(startSplit[0]);
-        int startMinute = Integer.parseInt(startSplit[1]);
-        int endHour = Integer.parseInt(endSplit[0]);
-        int endMinute = Integer.parseInt(endSplit[1]);
+        // Calculate parking fee based on time and vehicle type
+        long duration = calculateTimeDuration(startTime, endTime);
+        double parkingFee = calculateParkingAmount(duration, vehicleType);
 
-        int totalMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
-        if (totalMinutes <= 0) {
-            Toast.makeText(this, "End time must be after start time.", Toast.LENGTH_SHORT).show();
-            return;
+        // Apply discount for bike users
+        if (vehicleType.equalsIgnoreCase("Bike")) {
+            parkingFee *= 0.8; // 20% discount for bikes
         }
 
-        double hours = Math.ceil(totalMinutes / 60.0);
+        if (walletBalance >= parkingFee) {
+            // Deduct amount from wallet balance
+            walletBalance -= parkingFee;
+            databaseReference.child("wallet").setValue(walletBalance);
 
-        double baseRate = vehicleType.equalsIgnoreCase("Car") ? 150.0 : 100.0;
-        double additionalRate = vehicleType.equalsIgnoreCase("Car") ? 80.0 : 50.0;
+            // Fetch user's name
+            double finalParkingFee = parkingFee;
+            databaseReference.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String userName = snapshot.getValue(String.class);
 
-        final double[] cost = {baseRate};
-        if (hours > 1) {
-            cost[0] += (hours - 1) * additionalRate;
-        }
+                        // Create a booking object to store
+                        DatabaseReference bookingReference = FirebaseDatabase.getInstance().getReference("Bookings").push();
+                        String bookingId = bookingReference.getKey();
 
-        databaseReference.child("isReturningUser").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean isReturningUser = snapshot.exists() && snapshot.getValue(Boolean.class);
-                if (isReturningUser) {
-                    cost[0] *= 0.8;
-                }
+                        Booking booking = new Booking(
+                                bookingId,
+                                FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                                userName, // Pass the user's name
+                                vehicleType,
+                                startTime,
+                                endTime,
+                                location,
+                                finalParkingFee
+                        );
 
-                if (walletBalance >= cost[0]) {
-                    Toast.makeText(Book_Parking.this, "Booking successful!", Toast.LENGTH_SHORT).show();
-                    walletBalance -= cost[0];
-                    databaseReference.child("wallet").setValue(walletBalance);
-
-                    DatabaseReference bookingsRef = FirebaseDatabase.getInstance().getReference("Bookings");
-                    String bookingId = bookingsRef.push().getKey();
-                    Booking booking = new Booking(pincode, vehicleType, startTime, endTime, cost[0]);
-
-                    if (bookingId != null) {
-                        bookingsRef.child(bookingId).setValue(booking).addOnCompleteListener(task -> {
+                        // Save booking to Firebase, including parking cost
+                        bookingReference.setValue(booking).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Toast.makeText(Book_Parking.this, "Booking saved successfully!", Toast.LENGTH_SHORT).show();
-                                databaseReference.child("isReturningUser").setValue(true);
-                                finish();
+                                Toast.makeText(Book_Parking.this, "Parking booked successfully at " + location, Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(Book_Parking.this, "Failed to save booking.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Book_Parking.this, "Failed to book parking. Try again.", Toast.LENGTH_SHORT).show();
                             }
                         });
+                    } else {
+                        Toast.makeText(Book_Parking.this, "User name not found.", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(Book_Parking.this, "Insufficient wallet balance.", Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Book_Parking.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(Book_Parking.this, "Failed to fetch user name.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(Book_Parking.this, "Insufficient balance for booking.", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private class Booking {
-        public String pincode;
-        public String vehicleType;
-        public String startTime;
-        public String endTime;
-        public double cost;
+    private long calculateTimeDuration(String startTime, String endTime) {
+        try {
+            String[] startParts = startTime.split(":");
+            String[] endParts = endTime.split(":");
 
-        public Booking() {
-            // Default constructor required for Firebase
+            int startHour = Integer.parseInt(startParts[0]);
+            int startMinute = Integer.parseInt(startParts[1]);
+
+            int endHour = Integer.parseInt(endParts[0]);
+            int endMinute = Integer.parseInt(endParts[1]);
+
+            long startInMinutes = startHour * 60 + startMinute;
+            long endInMinutes = endHour * 60 + endMinute;
+
+            return endInMinutes - startInMinutes;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private double calculateParkingAmount(long duration, String vehicleType) {
+        double rate = 0;
+
+        if (vehicleType.equalsIgnoreCase("Car")) {
+            if (duration <= 60) {
+                rate = 250; // ₹150 for 1 hour
+            } else {
+                rate = 80 * (duration / 60);
+            }
+        } else if (vehicleType.equalsIgnoreCase("Bike")) {
+            if (duration <= 60) {
+                rate = 150; // ₹100 for 1 hour
+            } else {
+                rate = 60 * (duration / 60);
+            }
         }
 
-        public Booking(String pincode, String vehicleType, String startTime, String endTime, double cost) {
-            this.pincode = pincode;
+        return rate;
+    }
+
+    public class Booking {
+        private String bookingId;
+        private String userId;
+        private String userName; // New field for user's name
+        private String vehicleType;
+        private String startTime;
+        private String endTime;
+        private String location;
+        private double parkingFee; // New field for parking fee
+
+        // Default constructor (required for Firebase)
+        public Booking() {}
+
+        public Booking(String bookingId, String userId, String userName, String vehicleType, String startTime, String endTime, String location, double parkingFee) {
+            this.bookingId = bookingId;
+            this.userId = userId;
+            this.userName = userName;
             this.vehicleType = vehicleType;
             this.startTime = startTime;
             this.endTime = endTime;
-            this.cost = cost;
+            this.location = location;
+            this.parkingFee = parkingFee;
+        }
+
+        // Getters and setters
+        public String getBookingId() {
+            return bookingId;
+        }
+
+        public void setBookingId(String bookingId) {
+            this.bookingId = bookingId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public String getVehicleType() {
+            return vehicleType;
+        }
+
+        public void setVehicleType(String vehicleType) {
+            this.vehicleType = vehicleType;
+        }
+
+        public String getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(String startTime) {
+            this.startTime = startTime;
+        }
+
+        public String getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(String endTime) {
+            this.endTime = endTime;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public void setLocation(String location) {
+            this.location = location;
+        }
+
+        public double getParkingFee() {
+            return parkingFee;
+        }
+
+        public void setParkingFee(double parkingFee) {
+            this.parkingFee = parkingFee;
         }
     }
-    }
+}

@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Vehicle_Parking_Booking_System"
         tools:targetApi="31">
+        <activity
+            android:name=".Payment_Success"
+            android:exported="true">
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -23,33 +27,25 @@
 
         <activity
             android:name=".Add_Balance"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Feedback"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Profile"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Cancel_Parking"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Cost_Calculation"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Check_Availability"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Book_Parking"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity android:name="com.razorpay.CheckoutActivity" />
         <activity
             android:name=".user_register"
@@ -62,12 +58,10 @@
         </activity>
         <activity
             android:name=".user_login"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>
