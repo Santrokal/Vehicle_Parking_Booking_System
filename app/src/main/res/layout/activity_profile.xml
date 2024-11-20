@@ -1,9 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile">
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- User Details -->
+        <TextView
+            android:id="@+id/tvUserDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Details"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold" />
+
+        <!-- Active Bookings -->
+        <TextView
+            android:id="@+id/tvActiveBookings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Active Bookings"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold" />
+
+        <!-- Feedbacks -->
+        <TextView
+            android:id="@+id/tvFeedbacks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feedbacks"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold" />
+
+        <!-- Recharges -->
+        <TextView
+            android:id="@+id/tvRecharges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recharges"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold" />
+
+        <!-- Canceled Bookings -->
+        <TextView
+            android:id="@+id/tvCanceledBookings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Canceled Bookings"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>
