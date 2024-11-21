@@ -17,15 +17,41 @@
         android:theme="@style/Theme.Vehicle_Parking_Booking_System"
         tools:targetApi="31">
         <activity
-            android:name=".Admin_Menu"
+            android:name=".View_Users"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
+            android:name=".View_Feedback"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".View_Booking"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Admin_Menu"
+            android:exported="true" />
+        <activity
             android:name=".Success_Booking"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Payment_Success"
-            android:exported="true"></activity>
+            android:exported="true" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -33,22 +59,22 @@
 
         <activity
             android:name=".Add_Balance"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Feedback"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Profile"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Cancel_Parking"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Cost_Calculation"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Book_Parking"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity android:name="com.razorpay.CheckoutActivity" />
         <activity
             android:name=".user_register"
