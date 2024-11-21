@@ -7,21 +7,18 @@
 
     <TextView
         android:id="@+id/textViewNoBookings"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No Active Bookings"
+        android:text="No Bookings Available"
         android:visibility="gone"
+        android:textAlignment="center"
         android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:gravity="center"
-        android:layout_gravity="center"/>
+        android:padding="16dp" />
 
-    <!-- RecyclerView to display active bookings -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewBookings"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical"/>
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
 </LinearLayout>

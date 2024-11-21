@@ -15,6 +15,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -44,13 +46,13 @@ public class Cancel_Parking extends AppCompatActivity {
         // Set up RecyclerView
         recyclerViewBookings.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize Firebase Database references
+        // Initialize Firebase references
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         bookingsReference = FirebaseDatabase.getInstance().getReference("Bookings");
         canceledBookingsReference = FirebaseDatabase.getInstance().getReference("CanceledBookings");
         usersReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
 
-        // Fetch bookings from Firebase
+        // Fetch bookings
         fetchBookings();
     }
 
@@ -62,20 +64,21 @@ public class Cancel_Parking extends AppCompatActivity {
                         bookingList.clear();
 
                         for (DataSnapshot bookingSnapshot : snapshot.getChildren()) {
+                            // Extract booking details
                             String bookingId = bookingSnapshot.getKey();
                             String location = bookingSnapshot.child("location").getValue(String.class);
                             String startTime = bookingSnapshot.child("startTime").getValue(String.class);
                             String endTime = bookingSnapshot.child("endTime").getValue(String.class);
-                            double parkingFee = bookingSnapshot.child("parkingFee").getValue(Double.class);
-                            String userName = bookingSnapshot.child("userName").getValue(String.class);
+                            Double parkingFee = bookingSnapshot.child("parkingFee").getValue(Double.class);
                             String vehicleType = bookingSnapshot.child("vehicleType").getValue(String.class);
 
-                            if (bookingId != null && location != null && startTime != null && endTime != null && userName != null && vehicleType != null) {
-                                bookingList.add(new Booking(bookingId, location, startTime, endTime, parkingFee, userName, vehicleType));
+                            // Validate and add booking to the list
+                            if (bookingId != null && location != null && startTime != null && endTime != null && parkingFee != null && vehicleType != null) {
+                                bookingList.add(new Booking(bookingId, location, startTime, endTime, parkingFee, userId, vehicleType));
                             }
                         }
 
-                        // Update the RecyclerView and display No Bookings message if needed
+                        // Update RecyclerView or show "No Bookings" message
                         if (bookingList.isEmpty()) {
                             textViewNoBookings.setVisibility(View.VISIBLE);
                             recyclerViewBookings.setVisibility(View.GONE);
@@ -96,84 +99,57 @@ public class Cancel_Parking extends AppCompatActivity {
     }
 
     private void cancelBooking(Booking booking) {
-        // Fetch user details
-        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        usersReference.child("walletBalance").runTransaction(new Transaction.Handler() {
+            @NonNull
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String name = snapshot.child("name").getValue(String.class);
-                    String email = snapshot.child("email").getValue(String.class);
-                    String phone = snapshot.child("phone").getValue(String.class);
-                    Double walletBalance = snapshot.child("walletBalance").getValue(Double.class);
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Double currentBalance = mutableData.getValue(Double.class);
+                if (currentBalance == null) {
+                    currentBalance = 0.0;
+                }
+                mutableData.setValue(currentBalance + booking.getParkingFee());
+                return Transaction.success(mutableData);
+            }
 
-                    // Set default values if any field is null
-                    name = name != null ? name : "Unknown User";
-                    email = email != null ? email : "Unknown Email";
-                    phone = phone != null ? phone : "Unknown Phone";
-                    walletBalance = walletBalance != null ? walletBalance : 0.0;
-
-                    // Log the data for debugging
-                    System.out.println("User Details: " + name + ", " + email + ", " + phone + ", Wallet: " + walletBalance);
-
-                    // Store canceled booking details
+            @Override
+            public void onComplete(DatabaseError error, boolean committed, DataSnapshot snapshot) {
+                if (committed) {
+                    // Record canceled booking
                     String canceledDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
                     CanceledBooking canceledBooking = new CanceledBooking(
                             booking.getBookingId(),
                             booking.getLocation(),
                             canceledDateTime,
                             booking.getParkingFee(),
-                            name,
-                            email,
-                            phone
+                            booking.getUserName(),
+                            null, // Email (not provided in structure)
+                            null  // Phone (not provided in structure)
                     );
 
-                    Double finalWalletBalance = walletBalance;
                     canceledBookingsReference.child(userId).child(booking.getBookingId())
                             .setValue(canceledBooking)
                             .addOnSuccessListener(aVoid -> {
-                                // Update wallet balance
-                                double updatedBalance = finalWalletBalance + booking.getParkingFee();
-                                usersReference.child("walletBalance").setValue(updatedBalance)
+                                // Remove booking from active bookings
+                                bookingsReference.child(booking.getBookingId()).removeValue()
                                         .addOnSuccessListener(aVoid1 -> {
-                                            // Remove booking from "Bookings"
-                                            bookingsReference.child(booking.getBookingId()).removeValue()
-                                                    .addOnSuccessListener(aVoid2 -> {
-                                                        Toast.makeText(Cancel_Parking.this, "Booking canceled and amount refunded to wallet!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Cancel_Parking.this, "Booking canceled and amount refunded to wallet!", Toast.LENGTH_SHORT).show();
 
-                                                        // Update UI after removal
-                                                        bookingList.remove(booking);
-                                                        bookingAdapter.notifyDataSetChanged();
+                                            // Update UI
+                                            bookingList.remove(booking);
+                                            bookingAdapter.notifyDataSetChanged();
 
-                                                        if (bookingList.isEmpty()) {
-                                                            textViewNoBookings.setVisibility(View.VISIBLE);
-                                                            recyclerViewBookings.setVisibility(View.GONE);
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(e -> {
-                                                        System.err.println("Error removing booking: " + e.getMessage());
-                                                        Toast.makeText(Cancel_Parking.this, "Failed to cancel booking: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    });
+                                            if (bookingList.isEmpty()) {
+                                                textViewNoBookings.setVisibility(View.VISIBLE);
+                                                recyclerViewBookings.setVisibility(View.GONE);
+                                            }
                                         })
-                                        .addOnFailureListener(e -> {
-                                            System.err.println("Error updating wallet balance: " + e.getMessage());
-                                            Toast.makeText(Cancel_Parking.this, "Failed to update wallet balance: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        });
+                                        .addOnFailureListener(e -> Toast.makeText(Cancel_Parking.this, "Failed to remove booking: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                             })
-                            .addOnFailureListener(e -> {
-                                System.err.println("Error storing canceled booking: " + e.getMessage());
-                                Toast.makeText(Cancel_Parking.this, "Failed to store canceled booking: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
+                            .addOnFailureListener(e -> Toast.makeText(Cancel_Parking.this, "Failed to record canceled booking: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 } else {
-                    Toast.makeText(Cancel_Parking.this, "User data not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Cancel_Parking.this, "Failed to update wallet balance", Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                System.err.println("Error fetching user details: " + error.getMessage());
-                Toast.makeText(Cancel_Parking.this, "Failed to fetch user details: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }
