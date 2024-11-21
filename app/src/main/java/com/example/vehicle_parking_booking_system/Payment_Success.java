@@ -1,6 +1,9 @@
 package com.example.vehicle_parking_booking_system;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class Payment_Success extends AppCompatActivity {
 
     private TextView tvPaymentId, tvModeOfPayment, tvUserName, tvUserEmail;
+    private Button btnOkay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +23,7 @@ public class Payment_Success extends AppCompatActivity {
         tvModeOfPayment = findViewById(R.id.tvModeOfPayment);
         tvUserName = findViewById(R.id.tvUserName);
         tvUserEmail = findViewById(R.id.tvUserEmail);
+        btnOkay = findViewById(R.id.btnOkay);
 
         // Get the intent that started this activity
         String paymentId = getIntent().getStringExtra("paymentId");
@@ -31,5 +36,14 @@ public class Payment_Success extends AppCompatActivity {
         tvModeOfPayment.setText("Mode of Payment: " + modeOfPayment);
         tvUserName.setText("Name: " + userName);
         tvUserEmail.setText("Email: " + userEmail);
+
+        btnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

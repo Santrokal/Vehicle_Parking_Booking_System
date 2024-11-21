@@ -1,6 +1,7 @@
 package com.example.vehicle_parking_booking_system;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -186,6 +187,13 @@ public class Book_Parking extends AppCompatActivity {
 
             bookingReference.child(bookingId).setValue(booking).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    Intent intent = new Intent(Book_Parking.this, Success_Booking.class);
+                    intent.putExtra("bookingId", bookingId);
+                    intent.putExtra("location", location);
+                    intent.putExtra("startTime", startTime);
+                    intent.putExtra("endTime", endTime);
+                    intent.putExtra("parkingFee", parkingFee);
+                    startActivity(intent);
                     Toast.makeText(Book_Parking.this, "Parking booked successfully!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(Book_Parking.this, "Failed to book parking.", Toast.LENGTH_SHORT).show();
