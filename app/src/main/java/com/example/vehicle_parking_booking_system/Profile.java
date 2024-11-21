@@ -16,19 +16,20 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Profile extends AppCompatActivity {
 
-    private TextView tvUserDetails, tvActiveBookings, tvFeedbacks, tvRecharges, tvCanceledBookings;
+    private TextView tvUserDetails, tvWalletBalance, tvActiveBookings, tvCanceledBookings;
 
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference usersReference, bookingsReference, feedbackReference, rechargesReference, canceledBookingsReference;
+    private DatabaseReference usersReference, bookingsReference, canceledBookingsReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // Initialize views
         tvUserDetails = findViewById(R.id.tvUserDetails);
+        tvWalletBalance = findViewById(R.id.tvWalletBalance);
         tvActiveBookings = findViewById(R.id.tvActiveBookings);
-        tvFeedbacks = findViewById(R.id.tvFeedbacks);
-        tvRecharges = findViewById(R.id.tvRecharges);
         tvCanceledBookings = findViewById(R.id.tvCanceledBookings);
 
         // Initialize Firebase
@@ -38,15 +39,12 @@ public class Profile extends AppCompatActivity {
         // Initialize database references
         usersReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
         bookingsReference = FirebaseDatabase.getInstance().getReference("Bookings");
-        feedbackReference = FirebaseDatabase.getInstance().getReference("Feedback");
-        rechargesReference = FirebaseDatabase.getInstance().getReference("Recharges").child(userId);
         canceledBookingsReference = FirebaseDatabase.getInstance().getReference("CanceledBookings").child(userId);
 
-        // Fetch data
+        // Fetch and display user data
         fetchUserDetails();
-        fetchBookings();
-        fetchFeedbacks();
-        fetchRecharges();
+        fetchWalletBalance();
+        fetchActiveBookings();
         fetchCanceledBookings();
     }
 
@@ -57,8 +55,12 @@ public class Profile extends AppCompatActivity {
                 if (snapshot.exists()) {
                     String name = snapshot.child("name").getValue(String.class);
                     String email = snapshot.child("email").getValue(String.class);
+                    String phone = snapshot.child("phone").getValue(String.class);
 
-                    tvUserDetails.setText("Name: " + name + "\nEmail: " + email);
+                    // Display user details
+                    tvUserDetails.setText("Name: " + (name != null ? name : "N/A") + "\n" +
+                            "Email: " + (email != null ? email : "N/A") + "\n" +
+                            "Phone: " + (phone != null ? phone : "N/A"));
                 } else {
                     tvUserDetails.setText("User details not found.");
                 }
@@ -71,7 +73,26 @@ public class Profile extends AppCompatActivity {
         });
     }
 
-    private void fetchBookings() {
+    private void fetchWalletBalance() {
+        usersReference.child("walletBalance").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Double walletBalance = snapshot.getValue(Double.class);
+                    tvWalletBalance.setText("Wallet Balance: ₹" + (walletBalance != null ? walletBalance : 0.0));
+                } else {
+                    tvWalletBalance.setText("Wallet Balance: ₹0.0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Profile.this, "Failed to fetch wallet balance: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchActiveBookings() {
         bookingsReference.orderByChild("userId").equalTo(firebaseAuth.getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -81,8 +102,8 @@ public class Profile extends AppCompatActivity {
                             String location = booking.child("location").getValue(String.class);
                             String startTime = booking.child("startTime").getValue(String.class);
 
-                            bookingsData.append("Location: ").append(location).append("\n")
-                                    .append("Start Time: ").append(startTime).append("\n\n");
+                            bookingsData.append("Location: ").append(location != null ? location : "N/A").append("\n")
+                                    .append("Start Time: ").append(startTime != null ? startTime : "N/A").append("\n\n");
                         }
                         tvActiveBookings.setText(bookingsData.length() > 0 ? bookingsData.toString() : "No Active Bookings");
                     }
@@ -94,51 +115,6 @@ public class Profile extends AppCompatActivity {
                 });
     }
 
-    private void fetchFeedbacks() {
-        feedbackReference.orderByChild("userName").equalTo(firebaseAuth.getCurrentUser().getDisplayName())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        StringBuilder feedbackData = new StringBuilder();
-                        for (DataSnapshot feedback : snapshot.getChildren()) {
-                            String rating = feedback.child("rating").getValue(String.class);
-                            String comments = feedback.child("comments").getValue(String.class);
-
-                            feedbackData.append("Rating: ").append(rating).append("\n")
-                                    .append("Comments: ").append(comments).append("\n\n");
-                        }
-                        tvFeedbacks.setText(feedbackData.length() > 0 ? feedbackData.toString() : "No Feedback Provided");
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(Profile.this, "Failed to fetch feedback: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void fetchRecharges() {
-        rechargesReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                StringBuilder rechargeData = new StringBuilder();
-                for (DataSnapshot recharge : snapshot.getChildren()) {
-                    String amount = recharge.child("amount").getValue(String.class);
-                    String date = recharge.child("date").getValue(String.class);
-
-                    rechargeData.append("Amount: ₹").append(amount).append("\n")
-                            .append("Date: ").append(date).append("\n\n");
-                }
-                tvRecharges.setText(rechargeData.length() > 0 ? rechargeData.toString() : "No Recharges Found");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Profile.this, "Failed to fetch recharges: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private void fetchCanceledBookings() {
         canceledBookingsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -148,10 +124,10 @@ public class Profile extends AppCompatActivity {
                     String location = booking.child("location").getValue(String.class);
                     String cancelDate = booking.child("cancelDate").getValue(String.class);
 
-                    canceledData.append("Location: ").append(location).append("\n")
-                            .append("Cancelled On: ").append(cancelDate).append("\n\n");
+                    canceledData.append("Location: ").append(location != null ? location : "N/A").append("\n")
+                            .append("Cancelled On: ").append(cancelDate != null ? cancelDate : "N/A").append("\n\n");
                 }
-                tvCanceledBookings.setText(canceledData.length() > 0 ? canceledData.toString() : "No Cancelled Bookings");
+                tvCanceledBookings.setText(canceledData.length() > 0 ? canceledData.toString() : "No Canceled Bookings");
             }
 
             @Override

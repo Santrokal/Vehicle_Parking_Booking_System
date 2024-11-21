@@ -13,49 +13,26 @@
             android:id="@+id/tvUserDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User Details"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp"
-            android:textStyle="bold" />
+            android:text="User Details" />
 
-        <!-- Active Bookings -->
+        <TextView
+            android:id="@+id/tvWalletBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wallet Balance" />
+
         <TextView
             android:id="@+id/tvActiveBookings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Active Bookings"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp"
-            android:textStyle="bold" />
+            android:text="Active Bookings" />
 
-        <!-- Feedbacks -->
-        <TextView
-            android:id="@+id/tvFeedbacks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Feedbacks"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp"
-            android:textStyle="bold" />
-
-        <!-- Recharges -->
-        <TextView
-            android:id="@+id/tvRecharges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Recharges"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp"
-            android:textStyle="bold" />
-
-        <!-- Canceled Bookings -->
         <TextView
             android:id="@+id/tvCanceledBookings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Canceled Bookings"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:text="Canceled Bookings" />
+
 
     </LinearLayout>
 </ScrollView>
