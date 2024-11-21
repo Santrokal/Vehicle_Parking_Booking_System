@@ -11,7 +11,6 @@
 
         <!-- Vehicle Type Selection -->
         <TextView
-            android:id="@+id/tvVehicleType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Vehicle Type"
@@ -38,34 +37,27 @@
                 android:text="Bike" />
         </RadioGroup>
 
-        <!-- Date and Time Selection -->
+        <!-- Time Selection -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Start Date and Time"
+            android:text="Select Start Time"
             android:textSize="18sp"
             android:textStyle="bold"
             android:paddingTop="16dp"
             android:paddingBottom="8dp" />
 
         <Button
-            android:id="@+id/btnSelectStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Start Date" />
-
-        <Button
             android:id="@+id/btnSelectStartTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Start Time"
-            android:layout_marginTop="8dp" />
+            android:text="Select Start Time" />
 
         <TextView
-            android:id="@+id/tvStartDateTime"
+            android:id="@+id/tvStartTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start DateTime: Not Selected"
+            android:text="Start Time: Not Selected"
             android:textSize="16sp"
             android:layout_marginTop="8dp"
             android:padding="4dp" />
@@ -73,30 +65,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select End Date and Time"
+            android:text="Select End Time"
             android:textSize="18sp"
             android:textStyle="bold"
             android:paddingTop="16dp"
             android:paddingBottom="8dp" />
 
         <Button
-            android:id="@+id/btnSelectEndDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select End Date" />
-
-        <Button
             android:id="@+id/btnSelectEndTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select End Time"
-            android:layout_marginTop="8dp" />
+            android:text="Select End Time" />
 
         <TextView
-            android:id="@+id/tvEndDateTime"
+            android:id="@+id/tvEndTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="End DateTime: Not Selected"
+            android:text="End Time: Not Selected"
             android:textSize="16sp"
             android:layout_marginTop="8dp"
             android:padding="4dp" />
