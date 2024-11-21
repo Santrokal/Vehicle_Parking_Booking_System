@@ -1,84 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Vehicle Type Selection -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Vehicle Type"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp" />
-
-    <RadioGroup
-        android:id="@+id/rgVehicleType"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <RadioButton
-            android:id="@+id/rbCar"
+        android:orientation="vertical">
+
+        <!-- Vehicle Type Selection -->
+        <TextView
+            android:id="@+id/tvVehicleType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Car" />
-        <RadioButton
-            android:id="@+id/rbBike"
+            android:text="Select Vehicle Type"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/rgVehicleType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbCar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Car" />
+
+            <RadioButton
+                android:id="@+id/rbBike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bike" />
+        </RadioGroup>
+
+        <!-- Date and Time Selection -->
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bike" />
-    </RadioGroup>
+            android:text="Select Start Date and Time"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
 
-    <!-- Date Selection -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Start Date"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp" />
+        <Button
+            android:id="@+id/btnSelectStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Start Date" />
 
-    <Button
-        android:id="@+id/btnSelectStartDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select Start Date" />
+        <Button
+            android:id="@+id/btnSelectStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Start Time"
+            android:layout_marginTop="8dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvStartDate"
-        android:text="No Date Selected"
-        android:layout_marginTop="8dp" />
+        <TextView
+            android:id="@+id/tvStartDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start DateTime: Not Selected"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:padding="4dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select End Date"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select End Date and Time"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
 
-    <Button
-        android:id="@+id/btnSelectEndDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select End Date" />
+        <Button
+            android:id="@+id/btnSelectEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select End Date" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvEndDate"
-        android:text="No Date Selected"
-        android:layout_marginTop="8dp" />
+        <Button
+            android:id="@+id/btnSelectEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select End Time"
+            android:layout_marginTop="8dp" />
 
-    <!-- Total Cost Display -->
-    <TextView
-        android:id="@+id/tvTotalCost"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Total Cost: 0 Rs"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:textColor="@android:color/holo_blue_dark" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvEndDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End DateTime: Not Selected"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:padding="4dp" />
+
+        <!-- Total Cost Display -->
+        <TextView
+            android:id="@+id/tvTotalCost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total Cost: 0 Rs"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp" />
+    </LinearLayout>
+</ScrollView>
