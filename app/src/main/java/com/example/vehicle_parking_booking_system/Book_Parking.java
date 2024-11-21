@@ -218,13 +218,13 @@ public class Book_Parking extends AppCompatActivity {
 
         if (vehicleType.equalsIgnoreCase("Car")) {
             if (duration <= 60) {
-                rate = 250; // ₹150 for 1 hour
+                rate = 250;
             } else {
                 rate = 80 * (duration / 60);
             }
         } else if (vehicleType.equalsIgnoreCase("Bike")) {
             if (duration <= 60) {
-                rate = 150; // ₹100 for 1 hour
+                rate = 150;
             } else {
                 rate = 60 * (duration / 60);
             }
