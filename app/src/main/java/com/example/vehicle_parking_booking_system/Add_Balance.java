@@ -82,42 +82,50 @@ public class Add_Balance extends AppCompatActivity implements PaymentResultListe
         String amountText = etAmount.getText().toString().trim();
         double amount = Double.parseDouble(amountText);
 
-        // Update Wallet Balance
-        databaseReference.child("wallet").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Double currentBalance = task.getResult().getValue(Double.class);
-                if (currentBalance == null) currentBalance = 0.0;
-                double updatedBalance = currentBalance + amount;
+        // Fetch the user's name from the Realtime Database
+        databaseReference.child("name").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                String userName = task.getResult().getValue(String.class);
 
-                // Update wallet balance
-                databaseReference.child("wallet").setValue(updatedBalance);
+                // Update Wallet Balance
+                databaseReference.child("wallet").get().addOnCompleteListener(walletTask -> {
+                    if (walletTask.isSuccessful()) {
+                        Double currentBalance = walletTask.getResult().getValue(Double.class);
+                        if (currentBalance == null) currentBalance = 0.0;
+                        double updatedBalance = currentBalance + amount;
 
-                // Log the recharge details in the Recharges node
-                if (rechargeId != null) {
-                    DatabaseReference rechargeRef = databaseReference.child("Recharges").child(rechargeId);
+                        // Update wallet balance
+                        databaseReference.child("wallet").setValue(updatedBalance);
 
-                    // Store the recharge data
-                    rechargeRef.child("amount").setValue(amount);
-                    rechargeRef.child("transactionId").setValue(razorpayPaymentID);
-                    rechargeRef.child("timestamp").setValue(System.currentTimeMillis());  // Store timestamp (optional)
+                        // Log the recharge details in the Recharges node
+                        if (rechargeId != null) {
+                            DatabaseReference rechargeRef = databaseReference.child("Recharges").child(rechargeId);
 
-                    // Optionally, store additional user information
-                    rechargeRef.child("userName").setValue(firebaseAuth.getCurrentUser().getDisplayName()); // Assuming user has a name
-                    rechargeRef.child("status").setValue("Completed");  // Status of the recharge
-                }
+                            // Store the recharge data
+                            rechargeRef.child("amount").setValue(amount);
+                            rechargeRef.child("transactionId").setValue(razorpayPaymentID);
+                            rechargeRef.child("timestamp").setValue(System.currentTimeMillis());  // Store timestamp (optional)
+                            rechargeRef.child("userName").setValue(userName); // Use the fetched name
+                            rechargeRef.child("status").setValue("Completed");  // Status of the recharge
+                        }
 
-                // Pass data to PaymentSuccessActivity
-                Intent intent = new Intent(Add_Balance.this, Payment_Success.class);
-                intent.putExtra("paymentId", razorpayPaymentID);
-                intent.putExtra("modeOfPayment", "Razorpay"); // Assuming Razorpay as the mode
-                intent.putExtra("userName", firebaseAuth.getCurrentUser().getDisplayName());
-                intent.putExtra("userEmail", firebaseAuth.getCurrentUser().getEmail());
-                startActivity(intent);
+                        // Pass data to PaymentSuccessActivity
+                        Intent intent = new Intent(Add_Balance.this, Payment_Success.class);
+                        intent.putExtra("paymentId", razorpayPaymentID);
+                        intent.putExtra("modeOfPayment", "Razorpay"); // Assuming Razorpay as the mode
+                        intent.putExtra("userName", userName); // Use fetched user name
+                        intent.putExtra("userEmail", firebaseAuth.getCurrentUser().getEmail());
+                        startActivity(intent);
 
-                Toast.makeText(this, "Recharge completed successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Recharge completed successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Failed to fetch user details.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
 
 

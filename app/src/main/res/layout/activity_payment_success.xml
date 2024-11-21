@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="800dp"
     android:orientation="vertical"
+    android:background="@drawable/payment"
     android:padding="16dp">
 
     <TextView
@@ -11,37 +12,55 @@
         android:layout_height="wrap_content"
         android:text="Payment ID:"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="@color/red"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="90dp"/>
 
     <TextView
         android:id="@+id/tvModeOfPayment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mode of Payment:"
+        android:textColor="@color/red"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="30dp"/>
 
     <TextView
         android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name:"
+        android:textColor="@color/red"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="30dp"/>
 
     <TextView
         android:id="@+id/tvUserEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Email:"
+        android:textColor="@color/red"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="30dp"/>
+
+    <TextView
+        android:id="@+id/tvwelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="THANKS FOR RECHARGING TO WALLET"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"/>
 
     <Button
         android:id="@+id/btnOkay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Okay"
+        android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

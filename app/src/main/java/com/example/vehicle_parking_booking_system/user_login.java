@@ -65,10 +65,18 @@ public class user_login extends AppCompatActivity {
             return;
         }
 
+        // Check for Admin credentials
+        if (email.equalsIgnoreCase("admin@gmail.com") && password.equals("Admin123")) {
+            Toast.makeText(user_login.this, "Admin login successful!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(user_login.this, Admin_Menu.class)); // Navigate to Admin_Menu
+            finish();
+            return;
+        }
+
         // Show progress bar
         progressBar.setVisibility(View.VISIBLE);
 
-        // Firebase Authentication
+        // Firebase Authentication for regular users
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     progressBar.setVisibility(View.GONE);
@@ -83,4 +91,5 @@ public class user_login extends AppCompatActivity {
                     }
                 });
     }
+
 }
