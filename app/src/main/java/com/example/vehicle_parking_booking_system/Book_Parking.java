@@ -86,7 +86,8 @@ public class Book_Parking extends AppCompatActivity {
     }
 
     private void fetchWalletBalance() {
-        userReference.child("walletBalance").addListenerForSingleValueEvent(new ValueEventListener() {
+        // Use ValueEventListener to listen for real-time changes
+        userReference.child("walletBalance").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -103,6 +104,7 @@ public class Book_Parking extends AppCompatActivity {
             }
         });
     }
+
 
     private void checkReturningUser(String userId) {
         bookingReference.orderByChild("userId").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {

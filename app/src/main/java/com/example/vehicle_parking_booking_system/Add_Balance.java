@@ -2,6 +2,7 @@ package com.example.vehicle_parking_booking_system;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -9,20 +10,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.razorpay.Checkout;
-import com.razorpay.PaymentResultListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
 
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class Add_Balance extends AppCompatActivity implements PaymentResultListener {
 
     private EditText etAmount;
     private Button btnRecharge;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
+    private DatabaseReference userReference;
+
+    private static final String TAG = "Add_Balance";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +41,7 @@ public class Add_Balance extends AppCompatActivity implements PaymentResultListe
         // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         String userId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        userReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
 
         // Initialize Razorpay Checkout
         Checkout.preload(getApplicationContext());
@@ -68,69 +73,75 @@ public class Add_Balance extends AppCompatActivity implements PaymentResultListe
             // Start Razorpay Checkout
             checkout.open(Add_Balance.this, options);
         } catch (Exception e) {
+            Log.e(TAG, "Error in payment: " + e.getMessage());
             Toast.makeText(this, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onPaymentSuccess(String razorpayPaymentID) {
+        Log.d(TAG, "Payment Successful: " + razorpayPaymentID);
         Toast.makeText(this, "Payment Successful!", Toast.LENGTH_SHORT).show();
-
-        String userId = firebaseAuth.getCurrentUser().getUid();
-        String rechargeId = databaseReference.child("Recharges").push().getKey(); // Generate unique key for this recharge
 
         String amountText = etAmount.getText().toString().trim();
         double amount = Double.parseDouble(amountText);
 
-        // Fetch the user's name from the Realtime Database
-        databaseReference.child("name").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult().exists()) {
-                String userName = task.getResult().getValue(String.class);
+        userReference.child("walletBalance").get().addOnCompleteListener(walletTask -> {
+            if (walletTask.isSuccessful()) {
+                Double currentBalance = walletTask.getResult().getValue(Double.class);
+                if (currentBalance == null) {
+                    currentBalance = 0.0; // Initialize if walletBalance doesn't exist
+                }
 
-                // Update Wallet Balance
-                databaseReference.child("wallet").get().addOnCompleteListener(walletTask -> {
-                    if (walletTask.isSuccessful()) {
-                        Double currentBalance = walletTask.getResult().getValue(Double.class);
-                        if (currentBalance == null) currentBalance = 0.0;
-                        double updatedBalance = currentBalance + amount;
+                double updatedBalance = currentBalance + amount;
 
-                        // Update wallet balance
-                        databaseReference.child("wallet").setValue(updatedBalance);
+                // Update walletBalance and add recharge details in one operation
+                userReference.updateChildren(
+                        Map.of(
+                                "walletBalance", updatedBalance,
+                                "lastTransaction", razorpayPaymentID
+                        )
+                ).addOnCompleteListener(updateTask -> {
+                    if (updateTask.isSuccessful()) {
+                        Log.d(TAG, "Wallet balance updated successfully to: " + updatedBalance);
 
-                        // Log the recharge details in the Recharges node
+                        // Add recharge details
+                        String rechargeId = userReference.child("Recharges").push().getKey();
                         if (rechargeId != null) {
-                            DatabaseReference rechargeRef = databaseReference.child("Recharges").child(rechargeId);
-
-                            // Store the recharge data
-                            rechargeRef.child("amount").setValue(amount);
-                            rechargeRef.child("transactionId").setValue(razorpayPaymentID);
-                            rechargeRef.child("timestamp").setValue(System.currentTimeMillis());  // Store timestamp (optional)
-                            rechargeRef.child("userName").setValue(userName); // Use the fetched name
-                            rechargeRef.child("status").setValue("Completed");  // Status of the recharge
+                            DatabaseReference rechargeRef = userReference.child("Recharges").child(rechargeId);
+                            rechargeRef.setValue(
+                                    Map.of(
+                                            "amount", amount,
+                                            "transactionId", razorpayPaymentID,
+                                            "timestamp", System.currentTimeMillis(),
+                                            "status", "Completed"
+                                    )
+                            );
                         }
 
-                        // Pass data to PaymentSuccessActivity
+                        // Navigate to PaymentSuccessActivity
                         Intent intent = new Intent(Add_Balance.this, Payment_Success.class);
                         intent.putExtra("paymentId", razorpayPaymentID);
-                        intent.putExtra("modeOfPayment", "Razorpay"); // Assuming Razorpay as the mode
-                        intent.putExtra("userName", userName); // Use fetched user name
+                        intent.putExtra("modeOfPayment", "Razorpay");
+                        intent.putExtra("amount", amount);
                         intent.putExtra("userEmail", firebaseAuth.getCurrentUser().getEmail());
                         startActivity(intent);
-
-                        Toast.makeText(this, "Recharge completed successfully!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e(TAG, "Failed to update wallet balance.");
+                        Toast.makeText(this, "Failed to update wallet balance.", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Toast.makeText(this, "Failed to fetch user details.", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Failed to fetch wallet balance: " + walletTask.getException());
+                Toast.makeText(this, "Failed to fetch wallet balance.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
-
-
     @Override
     public void onPaymentError(int code, String response) {
+        Log.e(TAG, "Payment failed: " + response);
         Toast.makeText(this, "Payment failed: " + response, Toast.LENGTH_SHORT).show();
     }
 }
