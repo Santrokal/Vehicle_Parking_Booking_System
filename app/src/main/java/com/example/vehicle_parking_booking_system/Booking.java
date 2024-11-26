@@ -47,4 +47,8 @@ public class Booking {
     public String getVehicleType() {
         return vehicleType;
     }
+
+    public String getDate() {
+        return getDate();
+    }
 }

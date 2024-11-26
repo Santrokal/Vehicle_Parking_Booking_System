@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Book_Parking extends AppCompatActivity {
 
@@ -51,7 +53,7 @@ public class Book_Parking extends AppCompatActivity {
         btnBookParking = findViewById(R.id.btnBookParking);
         tvWalletBalance = findViewById(R.id.tvWalletBalance);
 
-        // Initialize Firebase
+
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -173,6 +175,9 @@ public class Book_Parking extends AppCompatActivity {
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
             String userName = firebaseUser != null ? firebaseUser.getDisplayName() : "Unknown";
 
+            // Get the current date
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
             String bookingId = bookingReference.push().getKey();
             Booking booking = new Booking(
                     bookingId,
@@ -182,7 +187,8 @@ public class Book_Parking extends AppCompatActivity {
                     startTime,
                     endTime,
                     parkingFee,
-                    userName // Store the user's name
+                    userName,
+                    currentDate
             );
 
             bookingReference.child(bookingId).setValue(booking).addOnCompleteListener(task -> {
@@ -251,12 +257,13 @@ public class Book_Parking extends AppCompatActivity {
         private String startTime;
         private String endTime;
         private double parkingFee;
-        private String userName; // Store the user's name
+        private String userName;
+        private String date;
 
         public Booking() {
         }
 
-        public Booking(String bookingId, String userId, String location, String vehicleType, String startTime, String endTime, double parkingFee, String userName) {
+        public Booking(String bookingId, String userId, String location, String vehicleType, String startTime, String endTime, double parkingFee, String userName,String date) {
             this.bookingId = bookingId;
             this.userId = userId;
             this.location = location;
@@ -264,7 +271,8 @@ public class Book_Parking extends AppCompatActivity {
             this.startTime = startTime;
             this.endTime = endTime;
             this.parkingFee = parkingFee;
-            this.userName = userName; // Initialize user name
+            this.userName = userName;
+            this.date = date;
         }
 
         public String getBookingId() {
@@ -296,7 +304,10 @@ public class Book_Parking extends AppCompatActivity {
         }
 
         public String getUserName() {
-            return userName; // Getter for user name
+            return userName;
+        }
+        public String getDate() {
+            return date;
         }
     }
 }
