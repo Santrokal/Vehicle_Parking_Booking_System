@@ -1,7 +1,6 @@
 package com.example.vehicle_parking_booking_system;
 
-public class Booking1 {
-
+public class Booking1{
     private String bookingId;
     private String userId;
     private String location;
@@ -10,15 +9,14 @@ public class Booking1 {
     private String endTime;
     private double parkingFee;
     private String userName;
-    private String date; // Added date field to store booking date
+    private String date; // Booking date
 
+    // Default constructor (required for Firebase)
     public Booking1() {
-        // Default constructor required for Firebase
     }
 
-    public Booking1(String bookingId, String userId, String location, String vehicleType,
-                    String startTime, String endTime, double parkingFee,
-                    String userName, String date) {
+    // Parameterized constructor
+    public Booking1(String bookingId, String userId, String location, String vehicleType, String startTime, String endTime, double parkingFee, String userName, String date) {
         this.bookingId = bookingId;
         this.userId = userId;
         this.location = location;
@@ -27,9 +25,10 @@ public class Booking1 {
         this.endTime = endTime;
         this.parkingFee = parkingFee;
         this.userName = userName;
-        this.date = date; // Initialize the date
+        this.date = date; // Initialize the booking date
     }
 
+    // Getters and Setters
     public String getBookingId() {
         return bookingId;
     }

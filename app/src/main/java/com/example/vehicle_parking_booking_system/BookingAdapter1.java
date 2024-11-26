@@ -4,53 +4,59 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class BookingAdapter1 extends ArrayAdapter<Booking1> {
+public class BookingAdapter1 extends RecyclerView.Adapter<BookingAdapter1.BookingViewHolder> {
 
     private Context context;
-    private List<Booking1> bookings;
+    private List<Booking1> bookingList;
 
-    public BookingAdapter1(Context context, List<Booking1> bookings) {
-        super(context, R.layout.booking_item, bookings);
+    public BookingAdapter1(Context context, List<Booking1> bookingList) {
         this.context = context;
-        this.bookings = bookings;
+        this.bookingList = bookingList;
+    }
+
+    @NonNull
+    @Override
+    public BookingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.booking_item, parent, false);
+        return new BookingViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the booking object for the current position
-        Booking1 booking = bookings.get(position);
+    public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
+        Booking1 booking = bookingList.get(position);
 
-        // Create a view for the booking item
-        if (convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.booking_item, parent, false);
+        holder.tvLocation.setText("Location: " + booking.getLocation());
+        holder.tvVehicleType.setText("Vehicle: " + booking.getVehicleType());
+        holder.tvStartTime.setText("Start Time: " + booking.getStartTime());
+        holder.tvEndTime.setText("End Time: " + booking.getEndTime());
+        holder.tvParkingFee.setText("Fee: ₹" + booking.getParkingFee());
+        holder.tvDate.setText("Date: " + booking.getDate());
+    }
+
+    @Override
+    public int getItemCount() {
+        return bookingList.size();
+    }
+
+    public static class BookingViewHolder extends RecyclerView.ViewHolder {
+
+        TextView tvLocation, tvVehicleType, tvStartTime, tvEndTime, tvParkingFee, tvDate;
+
+        public BookingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvLocation = itemView.findViewById(R.id.tvLocation);
+            tvVehicleType = itemView.findViewById(R.id.tvVehicleType);
+            tvStartTime = itemView.findViewById(R.id.tvStartTime);
+            tvEndTime = itemView.findViewById(R.id.tvEndTime);
+            tvParkingFee = itemView.findViewById(R.id.tvParkingFee);
+            tvDate = itemView.findViewById(R.id.tvDate);
         }
-
-        // Set the values for each field in the booking item layout
-        TextView tvBookingId = convertView.findViewById(R.id.tvBookingId);
-        TextView tvUserName = convertView.findViewById(R.id.tvUserName);
-        TextView tvLocation = convertView.findViewById(R.id.tvLocation);
-        TextView tvVehicleType = convertView.findViewById(R.id.tvVehicleType);
-        TextView tvStartTime = convertView.findViewById(R.id.tvStartTime);
-        TextView tvEndTime = convertView.findViewById(R.id.tvEndTime);
-        TextView tvParkingFee = convertView.findViewById(R.id.tvParkingFee);
-        TextView tvBookingDate = convertView.findViewById(R.id.tvBookingDate);
-
-        // Set the text for each TextView
-        tvBookingId.setText("Booking ID: " + booking.getBookingId());
-        tvUserName.setText("User: " + booking.getUserName());
-        tvLocation.setText("Location: " + booking.getLocation());
-        tvVehicleType.setText("Vehicle: " + booking.getVehicleType());
-        tvStartTime.setText("Start Time: " + booking.getStartTime());
-        tvEndTime.setText("End Time: " + booking.getEndTime());
-        tvParkingFee.setText("Fee: ₹" + booking.getParkingFee());
-        tvBookingDate.setText("Date: " + booking.getDate());
-
-        return convertView;
     }
 }

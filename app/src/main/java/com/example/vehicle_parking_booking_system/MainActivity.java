@@ -24,7 +24,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private TextView tvGreeting, tvUserName, tvDateTime;
-    private Button btnBookParking, btnCheckAvailability, btnCostCalculation, btnCancelParking, btnProfile, btnFeedback, btnAddBalance;
+    private Button btnBookParking, btnlogout, btnCostCalculation, btnCancelParking, btnProfile, btnFeedback, btnAddBalance;
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         btnProfile = findViewById(R.id.btnProfile);
         btnFeedback = findViewById(R.id.btnFeedback);
         btnAddBalance = findViewById(R.id.btnAddBalance);
+        btnlogout = findViewById(R.id.btnlogout);
 
         // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -106,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
         btnAddBalance.setOnClickListener(v -> {
             Toast.makeText(this, "Navigating to Add Balance", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, Add_Balance.class));
+        });
+        btnlogout.setOnClickListener(v -> {
+            Toast.makeText(this, "Logout Success", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, user_login.class));
         });
     }
 

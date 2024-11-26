@@ -14,7 +14,7 @@ import java.util.Locale;
 public class Admin_Menu extends AppCompatActivity {
 
     private TextView tvWelcome, tvDateTime;
-    private Button btnViewBooking, btnViewFeedback, btnViewUsers;
+    private Button btnViewBooking, btnViewFeedback, btnViewUsers,btnlogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,8 @@ public class Admin_Menu extends AppCompatActivity {
         btnViewBooking = findViewById(R.id.btnViewBooking);
         btnViewFeedback = findViewById(R.id.btnViewFeedback);
         btnViewUsers = findViewById(R.id.btnViewUsers);
+        btnlogout = findViewById(R.id.btnlogout);
+
 
         // Set current date and time
         String currentDateTime = new SimpleDateFormat("EEE, MMM d, yyyy 'at' h:mm a", Locale.getDefault()).format(new Date());
@@ -48,6 +50,11 @@ public class Admin_Menu extends AppCompatActivity {
         btnViewUsers.setOnClickListener(v -> {
             // Navigate to View Users Activity
             Intent intent = new Intent(Admin_Menu.this, View_Users.class);
+            startActivity(intent);
+        });
+        btnlogout.setOnClickListener(v -> {
+            // Navigate to View Users Activity
+            Intent intent = new Intent(Admin_Menu.this, user_login.class);
             startActivity(intent);
         });
     }

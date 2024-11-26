@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Booking ID:"
-        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:layout_marginTop="65dp"
         android:paddingBottom="30dp" />
@@ -21,7 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Location:"
-        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:layout_marginTop="20dp"
         android:textSize="18sp"
         android:paddingBottom="30dp" />
@@ -31,7 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Start Time:"
-        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:layout_marginTop="20dp"
         android:textSize="18sp"
         android:paddingBottom="30dp" />
@@ -41,7 +44,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="End Time:"
-        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:layout_marginTop="20dp"
         android:textSize="18sp"
         android:paddingBottom="30dp" />
@@ -51,7 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Parking Fee:"
-        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:layout_marginTop="20dp"
         android:textSize="18sp"
         android:paddingBottom="30dp" />
